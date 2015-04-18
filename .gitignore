@@ -9,6 +9,9 @@ ehthumbs.db
 *.docx
 *.vsdx
 *.dblp_coauthor
+*.gz
+bachelor's degree thesis/code/training/temp data
+bachelor's degree thesis/data/
 
 # Folder config file
 Desktop.ini
