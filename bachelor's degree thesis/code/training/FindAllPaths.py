@@ -72,16 +72,11 @@ if __name__ == '__main__':
 		for i in xrange(0, len(nodes)):
 			#if IsNodeActiveRecently(nodes[i], activeYearsDict, 1979):
 			pathsDict = {}
-			for j in xrange(i + 1, len(nodes)):
-				if nodes[j] not in communityNodesDict[nodes[i]]:# and IsNodeActiveRecently(nodes[j], activeYearsDict, 1979) and IfActiveYearsOverlap(nodes[i], nodes[j], activeYearsDict):
+			for j in xrange(0, len(nodes)):
+				if i != j and nodes[j] not in communityNodesDict[nodes[i]]:# and IsNodeActiveRecently(nodes[j], activeYearsDict, 1979) and IfActiveYearsOverlap(nodes[i], nodes[j], activeYearsDict):
 					paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
 					if len(paths) != 0:
-						if nodes[i] not in pathsDict:
-							pathsDict[nodes[i]] = {}
-						pathsDict[nodes[i]][nodes[j]] = paths
-						if nodes[j] not in pathsDict:
-							pathsDict[nodes[j]] = {}
-						pathsDict[nodes[j]][nodes[i]] = paths
+						pathsDict[nodes[j]] = paths
 			pathsDictFile = open("./temp data/PathsDict" + firstTimeSpan + "/" + str(nodes[i]), "w")
 			pickle.dump(pathsDict, pathsDictFile)
 			pathsDictFile.close()
