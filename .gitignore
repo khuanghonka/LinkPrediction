@@ -2,6 +2,14 @@
 Thumbs.db
 ehthumbs.db
 
+#link prediction
+*.pyc
+*.pdf
+*.doc
+*.docx
+*.vsdx
+*.dblp_coauthor
+
 # Folder config file
 Desktop.ini
 
