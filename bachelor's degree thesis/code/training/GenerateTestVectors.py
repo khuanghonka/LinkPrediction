@@ -27,8 +27,8 @@ for nodes in communities:
 			if i != j and nodes[j] not in communityNodesDict[nodes[i]]:# and IsNodeActiveRecently(nodes[j], activeYearsDict, 1979) and IfActiveYearsOverlap(nodes[i], nodes[j], activeYearsDict):
 				paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
 				if len(paths) != 0:
-					vector = GenerateVectors(paths, nodesDict)
-					vectorsDict[node[j]] = vector
+					vector = GenerateVectors.GenerateVectors(paths, nodesDict)
+					vectorsDict[nodes[j]] = vector
 		vectorsDictFile = open("./temp data/Vectors" + timeSpan + "/" + str(nodes[i]), "w")
 		pickle.dump(vectorsDict, vectorsDictFile)
 		vectorsDictFile.close()
