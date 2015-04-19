@@ -5,6 +5,7 @@ import pickle
 import sys
 sys.path.append("../tools")
 import StringProcessing
+import os
 
 def FileWalker(path):
     filesNames = os.listdir(path)

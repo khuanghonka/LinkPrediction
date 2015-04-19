@@ -1,4 +1,6 @@
 from FindAllPaths import *
+import CommunityDetectionByUsingLouvain
+import GenerateVectors
 
 timeSpan = "1970_1985"
 timeSpanEnd = 1985
@@ -20,14 +22,15 @@ for nodes in communities:
 
 	for i in xrange(0, len(nodes)):
 		#if IsNodeActiveRecently(nodes[i], activeYearsDict, 1979):
-		pathsDict = {}
+		vectorsDict = {}
 		for j in xrange(0, len(nodes)):
 			if i != j and nodes[j] not in communityNodesDict[nodes[i]]:# and IsNodeActiveRecently(nodes[j], activeYearsDict, 1979) and IfActiveYearsOverlap(nodes[i], nodes[j], activeYearsDict):
 				paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
 				if len(paths) != 0:
-					pathsDict[nodes[j]] = paths
-		pathsDictFile = open("./temp data/PathsDict" + timeSpan + "/" + str(nodes[i]), "w")
-		pickle.dump(pathsDict, pathsDictFile)
-		pathsDictFile.close()
+					vector = GenerateVectors(paths, nodesDict)
+					vectorsDict[node[j]] = vector
+		vectorsDictFile = open("./temp data/Vectors" + timeSpan + "/" + str(nodes[i]), "w")
+		pickle.dump(vectorsDict, vectorsDictFile)
+		vectorsDictFile.close()
 
 
