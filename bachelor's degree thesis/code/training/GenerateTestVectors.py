@@ -8,6 +8,7 @@ nodesDict = InitialData.InitialNodesPairWeightDict(timeSpan)
 communities = CommunityDetectionByUsingLouvain.ReadCommunitiesFromFile(timeSpan)
 print "Read"
 
+vectorsDict = {}
 for nodes in communities:
 
 	G = nx.Graph()
@@ -22,15 +23,17 @@ for nodes in communities:
 
 	for i in xrange(0, len(nodes)):
 		#if IsNodeActiveRecently(nodes[i], activeYearsDict, 1979):
-		vectorsDict = {}
 		for j in xrange(0, len(nodes)):
 			if i != j and nodes[j] not in communityNodesDict[nodes[i]]:# and IsNodeActiveRecently(nodes[j], activeYearsDict, 1979) and IfActiveYearsOverlap(nodes[i], nodes[j], activeYearsDict):
 				paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
 				if len(paths) != 0:
 					vector = GenerateVectors.GenerateVectors(paths, nodesDict)
-					vectorsDict[nodes[j]] = vector
-		vectorsDictFile = open("./temp data/Vectors" + timeSpan + "/" + str(nodes[i]), "w")
-		pickle.dump(vectorsDict, vectorsDictFile)
-		vectorsDictFile.close()
+					if nodes[i] not in vectorsDict:
+						vectorsDict[nodes[i]] = {}
+					vectorsDict[nodes[i]][nodes[j]] = vector
+
+vectorsDictFile = open("./temp data/Vectors" + timeSpan, "w")
+pickle.dump(vectorsDict, vectorsDictFile)
+vectorsDictFile.close()
 
 
