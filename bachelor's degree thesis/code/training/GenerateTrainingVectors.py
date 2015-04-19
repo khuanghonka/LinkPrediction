@@ -15,7 +15,7 @@ communities = CommunityDetectionByUsingLouvain.ReadCommunitiesFromFile(firstTime
 print "Read"
 
 vectorsDict = {}
-for community in communities[0:5]:
+for community in communities:
 	nodes = list(effectiveNodes.intersection(community))
 
 	G = nx.Graph()
