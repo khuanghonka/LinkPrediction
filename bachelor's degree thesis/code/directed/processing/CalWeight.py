@@ -7,7 +7,7 @@ import StringProcessing
 import pickle
 
 def CalWeight(timeSpan):
-	lines = open("../../data/dblp_coauthor/edges" + timeSpan + ".dblp_coauthor", "r")
+	lines = open("../../../data/dblp_coauthor/edges" + timeSpan + ".dblp_coauthor", "r")
 	nodesPairWeightDict = {}
 	for line in lines:
 		tokens = StringProcessing.SplitLine(line)
@@ -16,7 +16,7 @@ def CalWeight(timeSpan):
 		if first not in nodesPairWeightDict:
 			nodesPairWeightDict[first] = {}
 		nodesPairWeightDict[first][second] = nodesPairWeightDict[first].get(second, 0) + 1
-	nodesPairWeightDictFile = open("../../data/dblp_coauthor/NodesPairWeightDict" + timeSpan+ ".dblp_coauthor", "w")
+	nodesPairWeightDictFile = open("../../../data/dblp_coauthor/NodesPairWeightDict" + timeSpan+ ".dblp_coauthor", "w")
 	pickle.dump(nodesPairWeightDict, nodesPairWeightDictFile)
 	nodesPairWeightDictFile.close()
 

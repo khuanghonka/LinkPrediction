@@ -1,16 +1,17 @@
 #Author: Kai Huang
-#Date: 2015.04.02
+#Date: 2015.04.20
 
 import sys
 sys.path.append("../tools")
 import StringProcessing
-lines = open("../../data/dblp_coauthor/sorted_out.dblp_coauthor", "r")
+
+lines = open("../../../data/enron/sorted_out.enron", "r")
 counts = {}
 for line in lines:
 	tokens = StringProcessing.SplitLine(line)
 	counts[tokens[4]] = counts.get(tokens[4], 0) + 1
 lines.close()
-result = open("../../data/dblp_coauthor/aggregate.dblp_coauthor", "w")
+result = open("../../../data/enron/aggregate.enron", "w")
 for key in sorted(counts.keys()):
 	result.write(key + ' ' + str(counts[key]) + '\n')
 result.close()
