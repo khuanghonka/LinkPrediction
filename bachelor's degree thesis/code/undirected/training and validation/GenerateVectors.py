@@ -1,60 +1,46 @@
-#Author: Kai Huang
-#Date: 2015.04.07
+from FindAllPaths import *
+import CommunityDetectionByUsingLouvain
+import GenerateVector
 
-import sys
-sys.path.append("../tools")
-import DataInfo
-import pickle
-import InitialData
-import CalSubgraphAddress
-import hashlib
+def GenerateVectors(timeSpan):
 
-def CompleteGroup(path, nodesDict):
-	pathDict = {}
-	for i in path:
-		for j in path:
-			if j in nodesDict[i]:
-				if i not in pathDict:
-					pathDict[i] = {}
-				pathDict[i][j] = 1
-	return pathDict
-def HashPath(path):
-	s = ""
-	for i in sorted(path):
-		s += str(i) + " "
-	return hashlib.md5(s.encode("utf-8")).hexdigest()
+	nodesDict = InitialData.InitialNodesPairWeightDict(timeSpan)
+	communities = CommunityDetectionByUsingLouvain.ReadCommunitiesFromFile(timeSpan)
+	print "Read"
 
-def GenerateVectors(paths, nodesDict):
-	pathSet = set()
-	vector = {}
-	for path in paths:
-		if HashPath(path) not in pathSet:
-			pathSet.add(HashPath(path))
-			pathDict = CompleteGroup(path, nodesDict)
-			nodeMapping = {path[0]:1, path[-1]:2}
-			for i in xrange(1, len(path) - 1):
-				nodeMapping[path[i]] = i + 2
-			adjacencyMatrix = InitialData.InitialMatrix()
-			for i in pathDict:
-				for j in pathDict[i]:
-					adjacencyMatrix[nodeMapping[i]][nodeMapping[j]] = 1
-					adjacencyMatrix[nodeMapping[j]][nodeMapping[i]] = 1
-			minAddress = CalSubgraphAddress.ArgMinAddress(adjacencyMatrix)
-			vector[minAddress] = vector.get(minAddress, 0) + 1
-	return vector
+	vectorsDict = {}
+	for nodes in communities:
+		print("Community size = %d"%len(nodes))
+		
+		G = nx.Graph()
+		communityNodesDict = {}
+		for i in nodes:
+			if i not in communityNodesDict:
+				communityNodesDict[i] = []
+			for j in nodesDict[i]:
+				if j in nodes:
+					communityNodesDict[i].append(j)
+					G.add_edge(i, j)
+
+		for i in xrange(0, len(nodes)):
+			for j in xrange(i + 1, len(nodes)):
+				if nodes[j] not in communityNodesDict[nodes[i]]:
+					paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
+					if len(paths) != 0:
+						vector = GenerateVector.GenerateVector(paths, nodesDict)
+						if nodes[i] not in vectorsDict:
+							vectorsDict[nodes[i]] = {}
+						if nodes[j] not in vectorsDict:
+							vectorsDict[nodes[j]] = {}
+						vectorsDict[nodes[i]][nodes[j]] = vector
+						vectorsDict[nodes[j]][nodes[i]] = vector
+			print("nodes[%s] generated"%nodes[i])
+
+	vectorsDictFile = open("./temp data/Vectors" + timeSpan, "w")
+	pickle.dump(vectorsDict, vectorsDictFile)
+	vectorsDictFile.close()
+	print("timeSpan%s generated"%timeSpan)
 
 if __name__ == '__main__':
-	pass
-	# timeSpan = "1970_1979"
-	# filesNames, fullFilesNames = InitialData.FileWalker("./temp data/PathsDict" + timeSpan + "")
-	# for i in xrange(0, len(fullFilesNames)):
-	# 	print filesNames[i]
-	# 	print fullFilesNames[i]
-	# 	pathsDictFile = open(fullFilesNames[i], "r")
-	# 	pathsDict = pickle.load(pathsDictFile)
-	# 	pathsDictFile.close()
-	# 	nodesDict = InitialData.InitialNodesPairWeightDict(timeSpan)
-	# 	vectors = GenerateVectors(pathsDict, nodesDict, int(filesNames[i]))
-	# 	vectorsFile = open("./temp data/Vectors" + timeSpan + "/"+ filesNames[i], "w")
-	# 	pickle.dump(vectors, vectorsFile)
-	# 	vectorsFile.close()
+	GenerateVectors("2004_2006")
+	GenerateVectors("2004_2007")

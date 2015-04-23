@@ -30,5 +30,5 @@ def ReadCommunitiesFromFile(timeSpan):
 	return partitionSets
 	
 if __name__ == '__main__':
-	CommunityDetection("1970_1979")
-	CommunityDetection("1970_1985")
+	CommunityDetection("2004_2006")
+	CommunityDetection("2004_2007")

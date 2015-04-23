@@ -22,21 +22,10 @@
 # m = svm_train(y[:200], x[:200], '-c 4')
 # p_label, p_acc, p_val = svm_predict(y[200:], x[200:], m)
 
-# import InitialData
-# import pickle
-
-# vectorsDict = {}
-# filesNames, fullFilesNames = InitialData.FileWalker("./temp data/Vectors1970_1979")
-# for fullFileName in fullFilesNames:
-# 	vectorDictFile = open(fullFileName)
-# 	vectorsDict.update(pickle.load(vectorDictFile))
-
-# vectorsDictFile = open("./temp data/Vectors1970_1979/Vectors", "w")
-# pickle.dump(vectorsDict, vectorsDictFile)
 
 import pickle
 
-rfile = open("./temp data/PartitionSets1970_1985")
+rfile = open("./temp data/PartitionSets1970_1979")
 test = pickle.load(rfile)
 for i in test:
-	print len(i)
+	print i

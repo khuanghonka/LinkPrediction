@@ -4,22 +4,22 @@
 import sys
 sys.path.append("../tools")
 import StringProcessing
-lines = open("../../../data/dblp_coauthor/sorted_out.dblp_coauthor", "r")
-lines1970_1979 = open("../../../data/dblp_coauthor/edges1970_1979.dblp_coauthor", "w")
-lines1980_1984 = open("../../../data/dblp_coauthor/edges1980_1984.dblp_coauthor", "w")
-lines1970_1985 = open("../../../data/dblp_coauthor/edges1970_1985.dblp_coauthor", "w")
-lines1986_1990 = open("../../../data/dblp_coauthor/edges1986_1990.dblp_coauthor", "w")
+lines = open("../../../data/facebook-wosn-wall/sorted_out.facebook-wosn-wall", "r")
+lines2004_2006 = open("../../../data/facebook-wosn-wall/edges2004_2006.facebook-wosn-wall", "w")
+lines2007 = open("../../../data/facebook-wosn-wall/edges2007.facebook-wosn-wall", "w")
+lines2004_2007 = open("../../../data/facebook-wosn-wall/edges2004_2007.facebook-wosn-wall", "w")
+lines2008 = open("../../../data/facebook-wosn-wall/edges2008.facebook-wosn-wall", "w")
 for line in lines:
 	tokens = StringProcessing.SplitLine(line)
-	if tokens[4] <= "1979":
-		lines1970_1979.write(tokens[0] + ' ' + tokens[1] + '\n')
-	if tokens[4] >= "1980" and tokens[4] <= "1984":
-		lines1980_1984.write(tokens[0] + ' ' + tokens[1] + '\n')
-	if tokens[4] <= "1985":
-		lines1970_1985.write(tokens[0] + ' ' + tokens[1] + '\n')		
-	if tokens[4] >= "1986" and tokens[4] <= "1990":
-		lines1986_1990.write(tokens[0] + ' ' + tokens[1] + '\n')
-lines1970_1979.close()
-lines1980_1984.close()
-lines1970_1985.close()
-lines1986_1990.close()
+	if tokens[4] <= "2006":
+		lines2004_2006.write(tokens[0] + ' ' + tokens[1] + '\n')
+	if tokens[4] == "2007":
+		lines2007.write(tokens[0] + ' ' + tokens[1] + '\n')
+	if tokens[4] <= "2007":
+		lines2004_2007.write(tokens[0] + ' ' + tokens[1] + '\n')		
+	if tokens[4] == "2008":
+		lines2008.write(tokens[0] + ' ' + tokens[1] + '\n')
+lines2004_2006.close()
+lines2007.close()
+lines2004_2007.close()
+lines2008.close()

@@ -4,6 +4,7 @@
 from svmutil import *
 import InitialData
 import pickle
+
 class SupervisedLearning:
 	def GenerateSVMModel(self, firstTimeSpan, secondTimeSpan):
 		y, x = self.GenerateYAndX(firstTimeSpan, secondTimeSpan)
@@ -11,7 +12,7 @@ class SupervisedLearning:
 		#svm_save_model("./temp data/Model1970_1979", self.m)
 
 	def Validate(self, firstTimeSpan, secondTimeSpan):
-		#self.m = svm_load_model("./temp data/Model1970_1979") 
+		self.m = svm_load_model("./temp data/Model1970_1979") 
 		y, x = self.GenerateYAndX(firstTimeSpan, secondTimeSpan)
 		p_label, p_acc, p_val = svm_predict(y, x, self.m)
 		nodesDict = InitialData.InitialNodesPairWeightDict(secondTimeSpan)
@@ -26,18 +27,29 @@ class SupervisedLearning:
 						linksAppeared += 1
 		truePositive = 0
 		falsePositve = 0
-		for i in xrange(0, len(p_label)):
-			if p_label[i] == 1:
-				if y[i] == 1:
-					truePositive += 1
-				else:
-					falsePositve += 1
 
-		print "truePositive = ", truePositive, "falsePositve = ", falsePositve
+		print "linksAppeared = ", linksAppeared
 
-		precision = float(truePositive) / (truePositive + falsePositve)
-		recall = float(truePositive) / linksAppeared
-		print "precision = ", precision, "recall = ", recall
+		yfile = open("./temp data/y", "w")
+		for i in y:
+			yfile.write(str(i) + "\n")
+
+		wfile = open("./temp data/p_label", "w")
+		for i in p_label:
+			wfile.write(str(i) + "\n")
+
+		# for i in xrange(0, len(p_label)):
+		# 	if p_label[i] == 1:
+		# 		if y[i] == 1:
+		# 			truePositive += 1
+		# 		else:
+		# 			falsePositve += 1
+
+		# print "truePositive = ", truePositive, "falsePositve = ", falsePositve
+
+		# precision = float(truePositive) / (truePositive + falsePositve)
+		# recall = float(truePositive) / linksAppeared
+		# print "precision = ", precision, "recall = ", recall
 
 
 	def GenerateYAndX(self, firstTimeSpan, secondTimeSpan):
@@ -49,6 +61,7 @@ class SupervisedLearning:
 		for i in vectorsDict:
 			for j in vectorsDict[i]:
 				x.append(vectorsDict[i][j])
+				print("i: %s, j: %s"%(i, j))
 				if i in nodesDict and j in nodesDict[i]:
 					y.append(1)
 				else:
@@ -56,4 +69,4 @@ class SupervisedLearning:
 		return y, x
 
 supervisedLearning = SupervisedLearning()
-supervisedLearning.GenerateSVMModel("1970_1979", "1980_1984")
+supervisedLearning.GenerateYAndX("1970_1979", "1980_1984")
