@@ -9,7 +9,7 @@ class SupervisedLearning:
 	def GenerateSVMModel(self, firstTimeSpan, secondTimeSpan):
 		y, x = self.GenerateYAndX(firstTimeSpan, secondTimeSpan)
 		prob  = svm_problem(y, x)
-		param = svm_parameter('-t 2 -c 4')
+		param = svm_parameter('-t 2 -c 4 -v 4')
 		self.m = svm_train(prob, param)
 		#svm_save_model("./temp data/Model1970_1979", self.m)
 
