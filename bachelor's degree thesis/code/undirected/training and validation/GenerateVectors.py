@@ -50,6 +50,5 @@ def GenerateVectors(timeSpan):
 	print("timeSpan%s generated"%timeSpan)
 
 if __name__ == '__main__':
-	# GenerateVectors("2004_2006")
-	# GenerateVectors("2004_2007")	
-	GenerateVectors("2004_2005")
+	GenerateVectors("2004_2006")
+	GenerateVectors("2004_2007")	

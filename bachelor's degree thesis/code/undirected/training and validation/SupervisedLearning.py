@@ -8,11 +8,10 @@ import pickle
 class SupervisedLearning:
 	def GenerateSVMModel(self, firstTimeSpan, secondTimeSpan):
 		y, x = self.GenerateYAndX(firstTimeSpan, secondTimeSpan)
-		self.m = svm_train(y, x, "-c 4")
 		#svm_save_model("./temp data/Model1970_1979", self.m)
 
 	def Validate(self, firstTimeSpan, secondTimeSpan):
-		self.m = svm_load_model("./temp data/Model1970_1979") 
+		#self.m = svm_load_model("./temp data/Model1970_1979") 
 		y, x = self.GenerateYAndX(firstTimeSpan, secondTimeSpan)
 		p_label, p_acc, p_val = svm_predict(y, x, self.m)
 		nodesDict = InitialData.InitialNodesPairWeightDict(secondTimeSpan)
@@ -38,18 +37,18 @@ class SupervisedLearning:
 		for i in p_label:
 			wfile.write(str(i) + "\n")
 
-		# for i in xrange(0, len(p_label)):
-		# 	if p_label[i] == 1:
-		# 		if y[i] == 1:
-		# 			truePositive += 1
-		# 		else:
-		# 			falsePositve += 1
+		for i in xrange(0, len(p_label)):
+			if p_label[i] == 1:
+				if y[i] == 1:
+					truePositive += 1
+				else:
+					falsePositve += 1
 
-		# print "truePositive = ", truePositive, "falsePositve = ", falsePositve
+		print "truePositive = ", truePositive, "falsePositve = ", falsePositve
 
-		# precision = float(truePositive) / (truePositive + falsePositve)
-		# recall = float(truePositive) / linksAppeared
-		# print "precision = ", precision, "recall = ", recall
+		precision = float(truePositive) / (truePositive + falsePositve)
+		recall = float(truePositive) / linksAppeared
+		print "precision = ", precision, "recall = ", recall
 
 
 	def GenerateYAndX(self, firstTimeSpan, secondTimeSpan):
@@ -69,4 +68,5 @@ class SupervisedLearning:
 		return y, x
 
 supervisedLearning = SupervisedLearning()
-supervisedLearning.GenerateYAndX("1970_1979", "1980_1984")
+supervisedLearning.GenerateSVMModel("2004_2005", "2006")
+supervisedLearning.GenerateSVMModel("2004_2006", "2007")
