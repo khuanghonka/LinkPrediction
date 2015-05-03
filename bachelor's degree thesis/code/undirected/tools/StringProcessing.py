@@ -4,3 +4,6 @@
 def SplitLine(line):
 	tokens = line.split()
 	return tokens
+	
+def GetTimeSpan(startTime, endTime):
+	return startTime + "_" + endTime

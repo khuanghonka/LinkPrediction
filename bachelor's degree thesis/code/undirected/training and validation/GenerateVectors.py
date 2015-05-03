@@ -1,38 +1,57 @@
-from FindAllPaths import *
-import CommunityDetectionByUsingLouvain
+#Author: Kai Huang
+#Date: 2015.04.20
+
+import ConnectedComponents
 import GenerateVector
 import time
-def GenerateVectors(timeSpan):
+import InitialData
+import networkx as nx
+import pickle
+import sys
+sys.path.append("../tools")
+import StringProcessing
+import CommunityDetection
+import LinkClustering
+import AddressDictGenerator
+import DataInfo
 
-	nodesDict = InitialData.InitialNodesPairWeightDict(timeSpan)
-	communities = CommunityDetectionByUsingLouvain.ReadCommunitiesFromFile(timeSpan)
+def GenerateVectors(startTime, endTime, partitionMethod = "ConnectedComponents"):
+	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
+	nodesDict = InitialData.InitialNodesPairWeightDict(startTime, endTime)
+	addressDict = AddressDictGenerator.ReadAddressDictFromFile() 
+	if partitionMethod == "ConnectedComponents":
+		connectedComponents = ConnectedComponents.ReadAllConnectedComponentsFromFile(startTime, endTime)
+	elif partitionMethod == "CommunityDetection":
+		connectedComponents = CommunityDetection.ReadCommunitiesFromFile(startTime, endTime)
+	else:
+		connectedComponents = LinkClustering.ReadAllConnectedComponentsFromFile(startTime, endTime)
 	print "Read"
 
 	vectorsDict = {}
-	for nodes in communities:
-		print("Community size = %d"%len(nodes))
+	for nodes in connectedComponents:
+		print("Components size = %d"%len(nodes))
 		
 		G = nx.Graph()
-		communityNodesDict = {}
+		componentNodesDict = {}
 		for i in nodes:
-			if i not in communityNodesDict:
-				communityNodesDict[i] = []
+			if i not in componentNodesDict:
+				componentNodesDict[i] = []
 			for j in nodesDict[i]:
 				if j in nodes:
-					communityNodesDict[i].append(j)
+					componentNodesDict[i].append(j)
 					G.add_edge(i, j)
 
 		for i in xrange(0, len(nodes)):
 			startTime = time.time()
 			for j in xrange(i + 1, len(nodes)):
-				if nodes[j] not in communityNodesDict[nodes[i]]:
+				if nodes[j] not in componentNodesDict[nodes[i]]:
 					# startTime = time.time()
 					paths = list(nx.all_simple_paths(G, source = nodes[i], target = nodes[j], cutoff = 6))
 					# endTime = time.time()
 					# print("find paths time:%f"%(endTime - startTime))
 					if len(paths) != 0:
 						# startTime = time.time()
-						vector = GenerateVector.GenerateVector(paths, nodesDict)
+						vector = GenerateVector.GenerateVector(paths, nodesDict, addressDict)
 						if nodes[i] not in vectorsDict:
 							vectorsDict[nodes[i]] = {}
 						if nodes[j] not in vectorsDict:
@@ -50,5 +69,5 @@ def GenerateVectors(timeSpan):
 	print("timeSpan%s generated"%timeSpan)
 
 if __name__ == '__main__':
-	GenerateVectors("2004_2006")
-	GenerateVectors("2004_2007")	
+	GenerateVectors(DataInfo.firstTrainingStartTime, DataInfo.firstTrainingEndTime, "OverlappingCommunityDetection")
+	GenerateVectors(DataInfo.firstTestingStartTime, DataInfo.firstTestingEndTime, "OverlappingCommunityDetection")

@@ -6,6 +6,7 @@ import InitialData
 import pickle
 import os
 import sys
+import StringProcessing
 
 def FindAllConnectedComponents(nodesPairWeightDict):
 	nodesList = nodesPairWeightDict.keys()
@@ -13,7 +14,7 @@ def FindAllConnectedComponents(nodesPairWeightDict):
 	while len(nodesList) != 0:
 		nodesInConnectedComponent = FindConnectedComponent(nodesList[0], nodesPairWeightDict)
 		nodesList = list(set(nodesList).difference(nodesInConnectedComponent))
-		connectedComponents.append(nodesInConnectedComponent)
+		connectedComponents.append(list(nodesInConnectedComponent))
 	return connectedComponents
 
 def FindConnectedComponent(start, nodesPairWeightDict):
@@ -29,23 +30,23 @@ def FindConnectedComponent(start, nodesPairWeightDict):
 				nodesInConnectedComponent.add(neighbor)
 	return nodesInConnectedComponent
 
-def WriteAllConnectedComponentsToFile(timeSpan):
-	nodesPairWeightDict = InitialData.InitialNodesPairWeightDict(timeSpan)
+def WriteAllConnectedComponentsToFile(startTime, endTime):
+	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
+	nodesPairWeightDict = InitialData.InitialNodesPairWeightDict(startTime, endTime)
 	connectedComponents = FindAllConnectedComponents(nodesPairWeightDict)
-	connectedComponentsFile = open("./temp data/ConnectedComponents_" + timeSpan, "w")
+	connectedComponentsFile = open("./temp data/ConnectedComponents" + timeSpan, "w")
 	pickle.dump(connectedComponents, connectedComponentsFile)
 	connectedComponentsFile.close()
 
-def ReadAllConnectedComponentsFromFile(timeSpan):
-	if os.path.exists(sys.path[0] + "\ConnectedComponents_" + timeSpan):
-		connectedComponentsFile = open("./temp data/ConnectedComponents_" + timeSpan, "r")
+def ReadAllConnectedComponentsFromFile(startTime, endTime):
+	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
+	if os.path.exists(sys.path[0] + "\ConnectedComponents" + timeSpan):
+		connectedComponentsFile = open("./temp data/ConnectedComponents" + timeSpan, "r")
 		connectedComponents = pickle.load(connectedComponentsFile)
 		connectedComponentsFile.close()
 		return connectedComponents
 	else:
-		nodesPairWeightDict = InitialData.InitialNodesPairWeightDict(timeSpan)
+		nodesPairWeightDict = InitialData.InitialNodesPairWeightDict(startTime, endTime)
 		connectedComponents = FindAllConnectedComponents(nodesPairWeightDict)
 		return connectedComponents
 
-if __name__ == '__main__':
-	WriteAllConnectedComponentsToFile("1970_1979")

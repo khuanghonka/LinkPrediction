@@ -6,7 +6,7 @@ sys.path.append("../tools")
 import DataInfo
 import pickle
 import InitialData
-import CalSubgraphAddress
+from Address import Address
 import hashlib
 
 def CompleteGroup(path, nodesDict):
@@ -20,11 +20,11 @@ def CompleteGroup(path, nodesDict):
 	return pathDict
 def HashPath(path):
 	s = ""
-	for i in sorted(path):
+	for i in path:
 		s += str(i) + " "
 	return hashlib.md5(s.encode("utf-8")).hexdigest()
 
-def GenerateVector(paths, nodesDict):
+def GenerateVector(paths, nodesDict, addressDict):
 	pathSet = set()
 	vector = {}
 	for path in paths:
@@ -39,7 +39,8 @@ def GenerateVector(paths, nodesDict):
 			for i in pathDict:
 				for j in pathDict[i]:
 					adjacencyMatrix[nodeMapping[i]][nodeMapping[j]] = 1
-					adjacencyMatrix[nodeMapping[j]][nodeMapping[i]] = 1
-			minAddress = CalSubgraphAddress.ArgMinAddress(adjacencyMatrix)
-			vector[minAddress] = vector.get(minAddress, 0) + 1
+					#adjacencyMatrix[nodeMapping[j]][nodeMapping[i]] = 1
+			adjacencyMatrixAddress = Address().GetAddress(adjacencyMatrix)
+			subAddress = addressDict[adjacencyMatrixAddress]
+			vector[subAddress] = vector.get(subAddress, 0) + 1
 	return vector

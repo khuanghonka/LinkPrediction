@@ -1,25 +1,22 @@
 #Author: Kai Huang
 #Date: 2015.04.02
+#Author: Kai Huang
+#Date: 2015.04.02
 
 import sys
 sys.path.append("../tools")
 import StringProcessing
-lines = open("../../../data/facebook-wosn-wall/sorted_out.facebook-wosn-wall", "r")
-lines2004_2006 = open("../../../data/facebook-wosn-wall/edges2004_2006.facebook-wosn-wall", "w")
-lines2007 = open("../../../data/facebook-wosn-wall/edges2007.facebook-wosn-wall", "w")
-lines2004_2007 = open("../../../data/facebook-wosn-wall/edges2004_2007.facebook-wosn-wall", "w")
-lines2008 = open("../../../data/facebook-wosn-wall/edges2008.facebook-wosn-wall", "w")
-for line in lines:
-	tokens = StringProcessing.SplitLine(line)
-	if tokens[4] <= "2006":
-		lines2004_2006.write(tokens[0] + ' ' + tokens[1] + '\n')
-	if tokens[4] == "2007":
-		lines2007.write(tokens[0] + ' ' + tokens[1] + '\n')
-	if tokens[4] <= "2007":
-		lines2004_2007.write(tokens[0] + ' ' + tokens[1] + '\n')		
-	if tokens[4] == "2008":
-		lines2008.write(tokens[0] + ' ' + tokens[1] + '\n')
-lines2004_2006.close()
-lines2007.close()
-lines2004_2007.close()
-lines2008.close()
+from DateConversion import *
+
+def SiftData(startTime, endTime):
+	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
+	lines = open("../../../data/facebook-wosn-wall/cleaned_out.data", "r")
+	siftedLines= open("../../../data/facebook-wosn-wall/edges" + timeSpan + ".data", "w")
+	nodePairSet = set()
+	for line in lines:
+		tokens = StringProcessing.SplitLine(line)
+		if tokens[4] >= startTime and tokens[4] <= endTime:
+			if (tokens[0], tokens[1]) not in nodePairSet:
+				nodePairSet.add((tokens[0], tokens[1]))
+				siftedLines.write(tokens[0] + ' ' + tokens[1] + '\n')
+	siftedLines.close()
