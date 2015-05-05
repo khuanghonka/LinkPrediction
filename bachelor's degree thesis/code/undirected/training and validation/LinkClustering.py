@@ -270,7 +270,7 @@ def write_dendro(filename, orig_cid2edge, linkage):
 def OverlappingCommunityDetection(startTime, endTime):
     timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
     delimiter = " "
-    fullFileName = "../../../data/facebook-wosn-wall/edges" + timeSpan + ".data"
+    fullFileName = "../../../data/dblp/edges" + timeSpan + ".data"
     
     nodesPairWeightDict = InitialData.InitialNodesPairWeightDict(startTime, endTime)
     ij2wij = {}

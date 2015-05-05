@@ -10,8 +10,8 @@ from DateConversion import *
 
 def SiftData(startTime, endTime):
 	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
-	lines = open("../../../data/facebook-wosn-wall/cleaned_out.data", "r")
-	siftedLines= open("../../../data/facebook-wosn-wall/edges" + timeSpan + ".data", "w")
+	lines = open("../../../data/dblp/cleaned_dblp.data", "r")
+	siftedLines= open("../../../data/dblp/edges" + timeSpan + ".data", "w")
 	nodePairSet = set()
 	for line in lines:
 		tokens = StringProcessing.SplitLine(line)

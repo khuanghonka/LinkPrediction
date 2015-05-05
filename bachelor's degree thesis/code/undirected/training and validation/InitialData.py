@@ -17,7 +17,7 @@ def FileWalker(path):
 
 def InitialNodesPairWeightDict(startTime, endTime):
 	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
-	nodesPairWeightDictFile = open("../../../data/facebook-wosn-wall/NodesPairWeightDict" + timeSpan + ".data", "r")
+	nodesPairWeightDictFile = open("../../../data/dblp/NodesPairWeightDict" + timeSpan + ".data", "r")
 	nodesPairWeightDict = pickle.load(nodesPairWeightDictFile)
 	nodesPairWeightDictFile.close()
 	return nodesPairWeightDict
@@ -25,7 +25,7 @@ def InitialNodesPairWeightDict(startTime, endTime):
 def InitialNodesList(startTime, endTime):
 	timeSpan = StringProcessing.GetTimeSpan(startTime, endTime)
 	nodesList = set()
-	lines = open("../../../data/facebook-wosn-wall/edges" + timeSpan + ".data", "r")
+	lines = open("../../../data/dblp/edges" + timeSpan + ".data", "r")
 	for line in lines:
 		tokens = StringProcessing.SplitLine(line)
 		nodesList.add(int(tokens[0]))
