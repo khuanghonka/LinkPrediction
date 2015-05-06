@@ -12,7 +12,7 @@ from sklearn.metrics import f1_score, recall_score, precision_score, roc_auc_sco
 import sys
 sys.path.append("../tools")
 import DataInfo
-
+import ConnectedComponents
 
 class SupervisedLearning:
 	def __init__(self, firstTrainingStartTime, firstTrainingEndTime, secondTrainingStartTime, secondTrainingEndTime, firstTestingStartTime, firstTestingEndTime, secondTestingStartTime, secondTestingEndTime):
@@ -26,22 +26,21 @@ class SupervisedLearning:
 		self.secondTestingEndTime = secondTestingEndTime
 
 	def GenerateSVMModel(self):
+		firstTimeSpan = StringProcessing.GetTimeSpan(self.firstTrainingStartTime, self.firstTrainingEndTime)
 		x, y = self.GenerateXAndYForTraining()
 		parameters = {'C':[1, 10]}
 		svc = SVC(kernel = 'linear')
 		self.clf = grid_search.GridSearchCV(svc, parameters)
 		self.clf.fit(x, y)
-		model = open("./temp data/model")
-		pickle.dump(self.clf, model)
+		print self.clf
+
 	def Validate(self):
-		print self.clf.get_params()
 		x, y_true  = self.GenerateXAndYForTesting()		
 		y_score = self.clf.decision_function(x)
-
 		y_tuple = []
 		for i in xrange(0, len(y_true)):
 			y_tuple.append((y_score[i], y_true[i]))
-		sorted(y_tuple, cmp=lambda x,y:cmp(x[0],y[0]))
+		y_tuple.sort(cmp=lambda x,y:-cmp(x[0],y[0]))
 
 		print "roc", roc_auc_score(y_true, y_score)
 
@@ -62,11 +61,13 @@ class SupervisedLearning:
 		data = []
 		y = []
 		rowId = 0
-		self.features = set()
+		row.append(0)
+		col.append(0)
+		data.append(1)
+		y.append(-1)
 		for i in vectorsDict:
 			for j in vectorsDict[i]:
 				for k in vectorsDict[i][j]:
-					self.features.add(k)
 					row.append(rowId)
 					col.append(k)
 					data.append(vectorsDict[i][j][k])
@@ -75,7 +76,7 @@ class SupervisedLearning:
 				else:
 					y.append(-1)
 				rowId += 1
-		x = csr_matrix((data, (row, col)))
+		x = csr_matrix((data, (row, col)), shape = (rowId + 1, 4194301))
 		return x, np.array(y)
 
 	def GenerateXAndYForTesting(self):
@@ -88,19 +89,27 @@ class SupervisedLearning:
 		data = []
 		y = []
 		rowId = 0
-		for i in vectorsDict:
-			for j in vectorsDict[i]:
-				for k in vectorsDict[i][j]:
-					if k in self.features:
-						row.append(rowId)
-						col.append(k)
-						data.append(vectorsDict[i][j][k])
-				if i in nodesDict and j in nodesDict[i]:
-					y.append(1)
-				else:
-					y.append(-1)
-				rowId += 1
-		x = csr_matrix((data, (row, col)))
+		components = ConnectedComponents.ReadAllConnectedComponentsFromFile(self.firstTestingStartTime, self.firstTestingEndTime)
+		for component in components:
+			for i in component:
+				for j in component:
+					if i != j:
+						if i in vectorsDict and j in vectorsDict[i]:
+							for k in vectorsDict[i][j]:
+								row.append(rowId)
+								col.append(k)
+								data.append(vectorsDict[i][j][k])
+							if i in nodesDict and j in nodesDict[i]:
+								y.append(1)
+							else:
+								y.append(-1)
+						else:
+							row.append(rowId)
+							col.append(0)
+							data.append(1)
+							y.append(-1)
+						rowId += 1
+		x = csr_matrix((data, (row, col)), shape = (rowId, 4194301))
 		return x, np.array(y)
 
 supervisedLearning = SupervisedLearning(DataInfo.firstTrainingStartTime, DataInfo.firstTrainingEndTime, DataInfo.secondTrainingStartTime, DataInfo.secondTrainingEndTime, DataInfo.firstTestingStartTime, DataInfo.firstTestingEndTime, DataInfo.secondTestingStartTime, DataInfo.secondTestingEndTime)
