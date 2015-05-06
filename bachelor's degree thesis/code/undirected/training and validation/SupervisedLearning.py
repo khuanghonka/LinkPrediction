@@ -31,17 +31,26 @@ class SupervisedLearning:
 		svc = SVC(kernel = 'linear')
 		self.clf = grid_search.GridSearchCV(svc, parameters)
 		self.clf.fit(x, y)
-
+		model = open("./temp data/model")
+		pickle.dump(self.clf, model)
 	def Validate(self):
 		print self.clf.get_params()
-		x, y_true  = self.GenerateXAndYForTesting()
-		y_predict = self.clf.predict(x)
-		
+		x, y_true  = self.GenerateXAndYForTesting()		
 		y_score = self.clf.decision_function(x)
+
+		y_tuple = []
+		for i in xrange(0, len(y_true)):
+			y_tuple.append((y_score[i], y_true[i]))
+		sorted(y_tuple, cmp=lambda x,y:cmp(x[0],y[0]))
+
 		print "roc", roc_auc_score(y_true, y_score)
 
-		print "recall_score", recall_score(y_true, y_predict)
-		print "precision_score", precision_score(y_true, y_predict)
+		positiveCount = 0
+		for i in xrange(0, 100):
+			if y_tuple[i][1] == 1:
+				positiveCount += 1
+			print "p = ", positiveCount, "L = ", i + 1, "p/L = ", positiveCount / float(i + 1) 
+
 
 	def GenerateXAndYForTraining(self):
 		nodesDict = InitialData.InitialNodesPairWeightDict(self.secondTrainingStartTime, self.secondTrainingEndTime)

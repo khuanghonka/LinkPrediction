@@ -15,12 +15,12 @@ def CleanData():
 		if tokens[0] != tokens[1]:
 			if int(tokens[0]) not in nodes:
 				nodes[int(tokens[0])] = []
-			newLine = "".join([tokens[0], ' ', tokens[1], ' ', tokens[2], ' ', tokens[3], ' ', DateConversion.SecsToYear(int(tokens[3])), '\n'])
+			newLine = "".join([tokens[0], ' ', tokens[1], ' ', tokens[2], ' ', tokens[3], ' ', DateConversion.SecsToDateString(int(tokens[3])), '\n'])
 			nodes[int(tokens[0])].append(newLine)
 			
 			if int(tokens[1]) not in nodes:
 				nodes[int(tokens[1])] = []
-			newLine = "".join([tokens[1], ' ', tokens[0], ' ', tokens[2], ' ', tokens[3], ' ', DateConversion.SecsToYear(int(tokens[3])), '\n'])
+			newLine = "".join([tokens[1], ' ', tokens[0], ' ', tokens[2], ' ', tokens[3], ' ', DateConversion.SecsToDateString(int(tokens[3])), '\n'])
 			nodes[int(tokens[1])].append(newLine)
 	lines.close()
 	#write

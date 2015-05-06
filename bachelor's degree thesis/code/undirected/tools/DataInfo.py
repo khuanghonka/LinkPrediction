@@ -5,18 +5,18 @@ PathLengthLimit = 7 #We will ignore the path longer than PathLengthLimit
 
 ActiveYearsLimit = 5 #We will ignore the node who was not active in recent ActiveYearsLimit years
 
-firstTrainingStartTime = "2004"
+firstTrainingStartTime = "20070101"
 
-firstTrainingEndTime = "2006"
+firstTrainingEndTime = "20080331"
 
-secondTrainingStartTime = "2007"
+secondTrainingStartTime = "20080401"
 
-secondTrainingEndTime = "2007"
+secondTrainingEndTime = "20080630"
 
-firstTestingStartTime = "2004"
+firstTestingStartTime = "20050101"
 
-firstTestingEndTime = "2007"
+firstTestingEndTime = "20060331"
 
-secondTestingStartTime = "2008"
+secondTestingStartTime = "20060401"
 
-secondTestingEndTime = "2008"
+secondTestingEndTime = "20060630"
