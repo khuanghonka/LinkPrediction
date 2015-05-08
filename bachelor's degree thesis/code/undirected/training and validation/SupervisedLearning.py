@@ -60,11 +60,12 @@ class SupervisedLearning:
 		col = []
 		data = []
 		y = []
-		rowId = 0
 		row.append(0)
 		col.append(0)
 		data.append(1)
 		y.append(-1)
+
+		rowId = 1
 		for i in vectorsDict:
 			for j in vectorsDict[i]:
 				for k in vectorsDict[i][j]:
