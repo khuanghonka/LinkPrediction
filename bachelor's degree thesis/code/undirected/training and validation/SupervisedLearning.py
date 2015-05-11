@@ -60,12 +60,14 @@ class SupervisedLearning:
 		col = []
 		data = []
 		y = []
+
 		row.append(0)
 		col.append(0)
 		data.append(1)
 		y.append(-1)
 
 		rowId = 1
+
 		for i in vectorsDict:
 			for j in vectorsDict[i]:
 				for k in vectorsDict[i][j]:
@@ -77,7 +79,13 @@ class SupervisedLearning:
 				else:
 					y.append(-1)
 				rowId += 1
-		x = csr_matrix((data, (row, col)), shape = (rowId + 1, 4194301))
+
+		row.append(rowId)
+		col.append(4194300)
+		data.append(1)
+		y.append(-1)
+
+		x = csr_matrix((data, (row, col)))
 		return x, np.array(y)
 
 	def GenerateXAndYForTesting(self):
@@ -89,6 +97,7 @@ class SupervisedLearning:
 		col = []
 		data = []
 		y = []
+
 		rowId = 0
 		components = ConnectedComponents.ReadAllConnectedComponentsFromFile(self.firstTestingStartTime, self.firstTestingEndTime)
 		for component in components:
@@ -110,7 +119,12 @@ class SupervisedLearning:
 							data.append(1)
 							y.append(-1)
 						rowId += 1
-		x = csr_matrix((data, (row, col)), shape = (rowId, 4194301))
+
+		row.append(rowId)
+		col.append(4194300)
+		data.append(1)
+		y.append(-1)
+		x = csr_matrix((data, (row, col)))
 		return x, np.array(y)
 
 supervisedLearning = SupervisedLearning(DataInfo.firstTrainingStartTime, DataInfo.firstTrainingEndTime, DataInfo.secondTrainingStartTime, DataInfo.secondTrainingEndTime, DataInfo.firstTestingStartTime, DataInfo.firstTestingEndTime, DataInfo.secondTestingStartTime, DataInfo.secondTestingEndTime)
