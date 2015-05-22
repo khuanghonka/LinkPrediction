@@ -1,34 +1,3 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
-# link_clustering.py
-# Jim Bagrow, Yong-Yeol Ahn
-# Last Modified: 2010-08-27
-
-# Copyright 2008,2009,2010 James Bagrow, Yong-Yeol Ahn
-# 
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-changes 2010-08-27:
-    * all three output files now contain the same community id numbers
-    * comm2nodes and comm2edges both present the cid as the first
-    entry of each line.  Previously only comm2nodes did this.
-    * implemented weighted version, added '-w' switch
-    * expanded help string to explain input and outputs
-"""
 
 import sys, os
 from copy import copy

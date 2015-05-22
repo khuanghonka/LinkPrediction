@@ -29,8 +29,7 @@ class SupervisedLearning:
 		firstTimeSpan = StringProcessing.GetTimeSpan(self.firstTrainingStartTime, self.firstTrainingEndTime)
 		x, y = self.GenerateXAndYForTraining()
 		parameters = {'C':[1, 10]}
-		svc = SVC(kernel = 'linear')
-		self.clf = grid_search.GridSearchCV(svc, parameters)
+		self.clf  = SVC(kernel = 'linear')
 		self.clf.fit(x, y)
 		print self.clf
 
@@ -89,7 +88,8 @@ class SupervisedLearning:
 		return x, np.array(y)
 
 	def GenerateXAndYForTesting(self):
-		nodesDict = InitialData.InitialNodesPairWeightDict(self.secondTestingStartTime, self.secondTestingEndTime)
+		nodesDict = InitialData.InitialNodesPairWeightDict(self.firstTestingStartTime, self.firstTestingEndTime)
+		nodesDictLabel = InitialData.InitialNodesPairWeightDict(self.secondTestingStartTime, self.secondTestingEndTime)
 		firstTimeSpan = StringProcessing.GetTimeSpan(self.firstTestingStartTime, self.firstTestingEndTime)
 		vectorsDictFile = open("./temp data/Vectors" + firstTimeSpan)
 		vectorsDict = pickle.load(vectorsDictFile)
@@ -104,21 +104,22 @@ class SupervisedLearning:
 			for i in component:
 				for j in component:
 					if i != j:
-						if i in vectorsDict and j in vectorsDict[i]:
-							for k in vectorsDict[i][j]:
-								row.append(rowId)
-								col.append(k)
-								data.append(vectorsDict[i][j][k])
-							if i in nodesDict and j in nodesDict[i]:
-								y.append(1)
+						if i not in nodesDict or (i in nodesDict and j not in nodesDict[i]):
+							if i in vectorsDict and j in vectorsDict[i]:
+								for k in vectorsDict[i][j]:
+									row.append(rowId)
+									col.append(k)
+									data.append(vectorsDict[i][j][k])
+								if i in nodesDictLabel and j in nodesDictLabel[i]:
+									y.append(1)
+								else:
+									y.append(-1)
 							else:
+								row.append(rowId)
+								col.append(0)
+								data.append(1)
 								y.append(-1)
-						else:
-							row.append(rowId)
-							col.append(0)
-							data.append(1)
-							y.append(-1)
-						rowId += 1
+							rowId += 1
 
 		row.append(rowId)
 		col.append(4194300)
